@@ -126,19 +126,21 @@ function Rig() {
 
 export default function ThreeJSScene() {
   return (
-      <Canvas style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100vh', zIndex: -1 }}>
-        <ambientLight intensity={0.5} />
-        <directionalLight position={[10, 10, 5]} intensity={1} />
-        <Environment preset="city" />
-        <ScrollControls pages={10} damping={0.1}>
-          <Scroll>
-            <Suspense fallback={null}>
-              <SceneContent />
-            </Suspense>
-          </Scroll>
-        </ScrollControls>
-        <Rig />
-        <Preload />
-      </Canvas>
+      <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100vh', zIndex: -1 }}>
+        <Canvas>
+            <ambientLight intensity={0.5} />
+            <directionalLight position={[10, 10, 5]} intensity={1} />
+            <Environment preset="city" />
+            <ScrollControls pages={10} damping={0.1}>
+              <Scroll>
+                <Suspense fallback={null}>
+                  <SceneContent />
+                </Suspense>
+              </Scroll>
+            </ScrollControls>
+            <Rig />
+            <Preload />
+        </Canvas>
+      </div>
   )
 }

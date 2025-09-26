@@ -19,12 +19,13 @@ export default function Home() {
         <Suspense fallback={<div style={{ height: '100vh', width: '100%', backgroundColor: 'hsl(var(--background))' }} />}>
           <DynamicThreeJSScene />
         </Suspense>
-        <div style={{ height: '1000vh' }}> {/* This div creates the scrollable area */}
-          {/* You can add non-3D content here if you want it to scroll over the canvas */}
+        <div style={{ position: 'relative', zIndex: 1, pointerEvents: 'none' }}>
+            <div style={{ height: '1000vh' }}> {/* This div creates the scrollable area */}
+              {/* You can add non-3D content here if you want it to scroll over the canvas */}
+            </div>
         </div>
       </main>
       <Footer />
     </div>
   );
 }
-
