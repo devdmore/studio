@@ -1,36 +1,36 @@
 'use client';
-import * as THREE from 'three';
-import { useMemo, useRef, Suspense, useEffect, useState } from 'react';
-import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { useScroll, ScrollControls, Preload, Text3D, Environment, Image, Stars } from '@react-three/drei';
-import { EffectComposer, Bloom, DepthOfField, GodRays } from '@react-three/postprocessing';
+
+import { Canvas } from '@react-three/fiber';
+import { OrbitControls } from '@react-three/drei';
+import { Suspense } from 'react';
+
+/* Commenting out existing imports for now
+import dynamic from 'next/dynamic';
 import { portfolioData, Project as ProjectType } from '@/lib/portfolio-data';
-import gsap from 'gsap';
+import ThreeJSErrorBoundary from '@/components/ThreeJSErrorBoundary';
+import * as THREE from 'three';
+import { 
+  ScrollControls, 
+  Preload, 
+  Environment, 
+  Stars,
+  Text3D
+} from '@react-three/drei';
+import { 
+  EffectComposer, 
+  Bloom, 
+  DepthOfField, 
+  GodRays 
+} from '@react-three/postprocessing';
+*/
 
-function City() {
-  const buildings = useMemo(() => {
-    const buildingGeometries = [];
-    for (let i = 0; i < 50; i++) {
-      const height = Math.random() * 10 + 2;
-      const geometry = new THREE.BoxGeometry(1, height, 1);
-      const position = new THREE.Vector3(
-        (Math.random() - 0.5) * 20,
-        height / 2,
-        (Math.random() - 0.5) * 20
-      );
-      buildingGeometries.push({ geometry, position });
-    }
-    return buildingGeometries;
-  }, []);
-
+// Simple box component for testing
+function Box(props: any) {
   return (
-    <group>
-      {buildings.map((building, i) => (
-        <mesh key={i} position={building.position} geometry={building.geometry}>
-          <meshStandardMaterial color="#0a0a0a" emissive="#1f1f1f" roughness={0.5} metalness={0.8} />
-        </mesh>
-      ))}
-    </group>
+    <mesh {...props}>
+      <boxGeometry args={[1, 1, 1]} />
+      <meshStandardMaterial color="orange" />
+    </mesh>
   );
 }
 
@@ -345,34 +345,17 @@ function SceneContent() {
 }
 
 export default function ThreeJSScene() {
-  const sunRef = useRef<THREE.Mesh>(null!);
   return (
     <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100vh', zIndex: -1 }}>
-      <Canvas>
-        <color attach="background" args={['#000000']} />
-        <fog attach="fog" args={['#0a0a1a', 10, 60]} />
-        <ambientLight intensity={0.2} />
-        <pointLight position={[0, 30, -10]} intensity={200} color="#8a2be2" />
-        <directionalLight position={[0, 10, 5]} intensity={0.5} />
-        <Environment preset="night" />
-         <mesh ref={sunRef} position={[0, 25, -50]}>
-            <sphereGeometry args={[5, 32, 32]} />
-            <meshBasicMaterial color="white" />
-        </mesh>
-        <ScrollControls pages={10} damping={0.2}>
-          <Suspense fallback={null}>
-            <SceneContent />
-          </Suspense>
-        </ScrollControls>
-        <Preload all />
-        <EffectComposer>
-            <Bloom luminanceThreshold={0.3} luminanceSmoothing={0.9} height={300} intensity={1.5} />
-            <DepthOfField focusDistance={0} focalLength={0.02} bokehScale={2} height={480} />
-            <Suspense fallback={null}>
-              <GodRays sun={sunRef} samples={50} density={0.97} decay={0.97} weight={0.6} exposure={0.4} />
-            </Suspense>
-        </EffectComposer>
-      </Canvas>
+      <Suspense fallback={<div className="w-full h-full bg-black" />}>
+        <Canvas>
+          <ambientLight intensity={0.5} />
+          <pointLight position={[10, 10, 10]} />
+          <Box position={[-1.2, 0, 0]} />
+          <Box position={[1.2, 0, 0]} />
+          <OrbitControls />
+        </Canvas>
+      </Suspense>
     </div>
   );
 }
