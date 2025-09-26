@@ -1,6 +1,6 @@
 'use client';
 
-import { Bar, BarChart, XAxis, YAxis } from 'recharts';
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from 'recharts';
 import { Section, SectionTitle } from './Section';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
@@ -32,7 +32,7 @@ export function Skills({ skills }: { skills: SkillsData }) {
       proficiency: 70,
       fill: 'var(--color-experience)',
     })),
-  ].sort((a, b) => a.proficiency - b.proficiency);
+  ].sort((a, b) => b.proficiency - a.proficiency);
 
   const chartConfig = {
     proficiency: {
@@ -100,26 +100,31 @@ export function Skills({ skills }: { skills: SkillsData }) {
               <BarChart
                 accessibilityLayer
                 data={chartData}
-                layout="vertical"
-                margin={{ left: 10 }}
+                layout="horizontal"
+                margin={{ top: 10, right: 10, left: 10, bottom: 40 }}
               >
-                <YAxis
+                <CartesianGrid vertical={false} />
+                <XAxis
                   dataKey="name"
                   type="category"
                   tickLine={false}
                   tickMargin={10}
                   axisLine={false}
+                  angle={-45}
+                  textAnchor="end"
+                  interval={0}
+                  height={80}
                   tickFormatter={(value) =>
                     value.length > 15 ? `${value.slice(0, 15)}...` : value
                   }
                   className="fill-foreground text-sm"
                 />
-                <XAxis dataKey="proficiency" type="number" hide />
+                <YAxis dataKey="proficiency" type="number" hide />
                 <ChartTooltip
                   cursor={false}
                   content={<ChartTooltipContent hideLabel />}
                 />
-                <Bar dataKey="proficiency" layout="vertical" radius={5} />
+                <Bar dataKey="proficiency" layout="horizontal" radius={5} barSize={20} />
               </BarChart>
             </ChartContainer>
           </CardContent>
