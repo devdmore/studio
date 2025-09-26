@@ -1,7 +1,7 @@
-// @ts-nocheck
+
 'use client';
 import * as THREE from 'three';
-import { useRef, useState } from 'react';
+import { useRef, useState, Suspense } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import {
   useScroll,
@@ -15,10 +15,10 @@ import {
 import { portfolioData } from '@/lib/portfolio-data';
 
 function SceneContent() {
-  const content = useRef();
+  const content = useRef<THREE.Group>(null!);
   const scroll = useScroll();
-  const { width, height } = useThree((state) => state.viewport);
-  const [hovered, setHovered] = useState(null);
+  const { width } = useThree((state) => state.viewport);
+  const [hovered, setHovered] = useState<number | null>(null);
 
   useFrame(() => {
     if (content.current) {
@@ -66,7 +66,10 @@ function SceneContent() {
           Projects
         </Text>
         {portfolioData.projects.map((project, i) => (
-          <group key={i} position={[-width / 4 + (i % 3) * (width/4) , -10 - Math.floor(i / 3) * 10, 0]}>
+          <group
+            key={i}
+            position={[-width / 4 + (i % 3) * (width / 4), -10 - Math.floor(i / 3) * 10, 0]}
+          >
             <Image
               url={`https://picsum.photos/seed/${i + 10}/400/300`}
               scale={[width / 8, width / 10, 1]}
@@ -75,7 +78,7 @@ function SceneContent() {
             />
             {hovered === i && (
               <Text
-                position={[0, -width/16, 1]}
+                position={[0, -width / 16, 1]}
                 fontSize={width / 40}
                 color="white"
                 anchorX="center"
@@ -88,7 +91,7 @@ function SceneContent() {
           </group>
         ))}
       </group>
-      
+
       <group position={[0, -80, 0]}>
         <Text
           position={[0, 0, 0]}
@@ -121,19 +124,21 @@ function Rig() {
   });
 }
 
-export function Scene() {
+export default function ThreeJSScene() {
   return (
-    <Canvas style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100vh' }}>
-      <ambientLight intensity={0.5} />
-      <directionalLight position={[10, 10, 5]} intensity={1} />
-      <Environment preset="city" />
-      <ScrollControls pages={10} damping={0.1}>
-        <Scroll>
-          <SceneContent />
-        </Scroll>
-      </ScrollControls>
-      <Rig />
-      <Preload />
-    </Canvas>
-  );
+      <Canvas style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100vh', zIndex: -1 }}>
+        <ambientLight intensity={0.5} />
+        <directionalLight position={[10, 10, 5]} intensity={1} />
+        <Environment preset="city" />
+        <ScrollControls pages={10} damping={0.1}>
+          <Scroll>
+            <Suspense fallback={null}>
+              <SceneContent />
+            </Suspense>
+          </Scroll>
+        </ScrollControls>
+        <Rig />
+        <Preload />
+      </Canvas>
+  )
 }
