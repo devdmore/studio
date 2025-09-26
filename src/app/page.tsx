@@ -1,24 +1,21 @@
-
 'use client';
 import { Header } from './components/Header';
 import { Footer } from './components/Footer';
 import dynamic from 'next/dynamic';
-import React, { Suspense } from 'react';
+import React from 'react';
 
 const DynamicThreeJSScene = dynamic(() => import('./components/ThreeJSScene'), {
   ssr: false,
-  loading: () => <div style={{ height: '100vh', width: '100%', backgroundColor: 'hsl(var(--background))' }} />,
+  loading: () => <div style={{ position: 'fixed', top: 0, left: 0, height: '100vh', width: '100%', backgroundColor: 'hsl(var(--background))' }} />,
 });
 
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="dark">
       <Header />
       <main className="flex-grow">
-        <Suspense fallback={<div style={{ height: '100vh', width: '100%', backgroundColor: 'hsl(var(--background))' }} />}>
           <DynamicThreeJSScene />
-        </Suspense>
         <div style={{ position: 'relative', zIndex: 1, pointerEvents: 'none' }}>
             <div style={{ height: '1000vh' }}> {/* This div creates the scrollable area */}
               {/* You can add non-3D content here if you want it to scroll over the canvas */}
