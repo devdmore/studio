@@ -30,6 +30,13 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  webpack: (config) => {
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      three$: 'three/src/Three.js',
+    };
+    return config;
+  },
 };
 
 export default nextConfig;
